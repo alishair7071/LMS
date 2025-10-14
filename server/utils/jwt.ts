@@ -14,16 +14,16 @@ interface ITokenOptions {
 
   //option for cookies
  export const accessTokenOptions: ITokenOptions = {
-    expires: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes
-    maxAge: 5 * 60 * 1000, // 5 minutes
+    expires: new Date(Date.now() + 30 * 60 * 1000), // 30 minutes
+    maxAge: 30 * 60 * 1000, // 30 minutes
     httpOnly: true,
     sameSite: "lax",
   };
 
   
   export const refreshTokenOptions: ITokenOptions = {
-    expires: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5 days
-    maxAge: 5 * 24 * 60 * 60 * 1000, // 5 days
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     httpOnly: true,
     sameSite: "lax",
   };

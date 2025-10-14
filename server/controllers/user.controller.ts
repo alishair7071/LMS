@@ -10,7 +10,12 @@ import { sendToken } from "../utils/jwt";
 import { redis } from "../utils/redis";
 import { accessTokenOptions } from "../utils/jwt";
 import { refreshTokenOptions } from "../utils/jwt";
-import { getUserById } from "../services/user.service";
+import {
+  getAllUsersService,
+  getUserById,
+  updateUserRoleService,
+} from "../services/user.service";
+import cloudinary from "cloudinary";
 
 //register user
 interface IregistrationBody {
@@ -210,13 +215,15 @@ export const updateAccessToken = catchAsyncErrors(
       res.cookie("access_token", accessToken, accessTokenOptions);
       res.cookie("refresh_token", refresh_Token, refreshTokenOptions);
 
+      await redis.set(user._id, JSON.stringify(user), "EX", 604800);
+
+
       res.status(200).json({
         success: true,
         accessToken,
         user,
       });
 
-      //await redis.set(user._id, JSON.stringify(user), "EX", 604800);
       //next();
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -266,6 +273,7 @@ interface IUpdateUserInfo {
 }
 export const updateUserInfo = catchAsyncErrors(
   async (req: Request, res: Response, next: NextFunction) => {
+    console.log("entered in update user info");
     try {
       const { name, email } = req.body as IUpdateUserInfo;
       const userId = req.user?._id as string;
@@ -312,7 +320,7 @@ export const updateUserPassword = catchAsyncErrors(
       }
       user.password = newPassword;
       await user.save();
-      const userId = req.user?._id as string || "";
+      const userId = (req.user?._id as string) || "";
       if (!userId) {
         return next(new Error("User ID is undefined"));
       }
@@ -326,4 +334,105 @@ export const updateUserPassword = catchAsyncErrors(
       return next(new ErrorHandler(error.message, 400));
     }
   }
-); 
+);
+
+//update user profile picture
+interface IUpdateProfilePicture {
+  avatar: string;
+}
+export const updateUserProfilePicture = catchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    console.log("entered in update user avatar");
+
+    try {
+      console.log("entered in try");
+      const { avatar } = req.body as IUpdateProfilePicture;
+      const userId = req.user?._id as string;
+      const user = await userModel.findById(userId);
+      if (avatar && user) {
+        console.log("entered in if block ");
+
+        //if usere have one avatar then call this
+        if (user?.avatar?.public_id) {
+          //first we are Deleting the old Image
+          await cloudinary.v2.uploader.destroy(user?.avatar?.public_id);
+          const myCloud = await cloudinary.v2.uploader.upload(avatar, {
+            folder: "lms-avatars",
+            width: 150,
+          });
+          user.avatar = {
+            public_id: myCloud.public_id,
+            url: myCloud.secure_url,
+          };
+        } else {
+          if (avatar) {
+            const myCloud = await cloudinary.v2.uploader.upload(avatar, {
+              folder: "lms-avatars",
+              width: 150,
+            });
+            user.avatar = {
+              public_id: myCloud.public_id,
+              url: myCloud.secure_url,
+            };
+          }
+        }
+      }
+      await user?.save();
+      if (!userId) {
+        return next(new Error("User ID is undefined"));
+      }
+      await redis.set(userId, JSON.stringify(user));
+      res.status(200).json({
+        success: true,
+        user,
+      });
+    } catch (error: any) {
+      console.log("entered in catch block ");
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
+
+// get all users ---admin
+export const getAllUsers = catchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      getAllUsersService(res);
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
+
+//Update usere Role ---admin
+export const updateUserRole = catchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id, role } = req.body;
+      updateUserRoleService(res, id, role);
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
+
+//delete User ---only for admins
+export const deleteUser = catchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      const user = await userModel.findById(id);
+      if (!user) {
+        return next(new ErrorHandler("User not found", 400));
+      }
+      await user.deleteOne({ id });
+      await redis.del(id);
+      res.status(201).json({
+        success: true,
+        message: "User deleted successfully.",
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
