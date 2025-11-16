@@ -1,12 +1,12 @@
 import React, { FC } from "react";
 
-interface HeadProps {
+type Props = {
   title: string;
   description: string;
   keywords: string;
-}
+};
 
-const Heading: FC<HeadProps> = ({ title, description, keywords }) => {
+const Heading = ({ title, description, keywords }: Props) => {
   return (
     <>
       <title>{title}</title>
