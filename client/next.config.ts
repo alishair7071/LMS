@@ -1,7 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  reactStrictMode: true,
+  images: {
+    // Allow images served from Cloudinary (used for avatars)
+    domains: ["res.cloudinary.com"],
+    // Alternatively you could use `remotePatterns` for more control:
+    // remotePatterns: [
+    //   { protocol: 'https', hostname: 'res.cloudinary.com', pathname: '/**' }
+    // ]
+  },
 };
 
 export default nextConfig;

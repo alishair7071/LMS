@@ -1,12 +1,42 @@
-import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { userLogin } from "../auth/authSlice";
 
-
-export const apiSlice= createApi({
-    reducerPath: 'api',
-    baseQuery: fetchBaseQuery({
-        baseUrl: process.env.NEXT_PUBLIC_SERVER_URL,
+export const apiSlice = createApi({
+  reducerPath: "api",
+  baseQuery: fetchBaseQuery({
+    baseUrl: process.env.NEXT_PUBLIC_SERVER_URL,
+  }),
+  endpoints: (builder) => ({
+    refreshToken: builder.query({
+      query: (data) => ({
+        url: "refresh",
+        method: "GET",
+        credentials: "include",
+      }),
     }),
-    endpoints: (builder) => ({})
+
+    loadUser: builder.query({
+      query: (data) => ({
+        url: "me",
+        method: "GET",
+        credentials: "include",
+      }),
+
+      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+        try {
+          const result = await queryFulfilled;
+          dispatch(
+            userLogin({
+              token: result.data.accessToken,
+              user: result.data.user,
+            })
+          );
+        } catch (error) {
+          console.log("Error occured in registration api", error);
+        }
+      },
+    }),
+  }),
 });
 
-export const {}= apiSlice;
+export const { useRefreshTokenQuery, useLoadUserQuery } = apiSlice;

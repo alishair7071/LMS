@@ -12,6 +12,7 @@ import { FcGoogle } from "react-icons/fc";
 import toast from "react-hot-toast";
 import { styles } from "../../../app/styles/styles";
 import { useLoginMutation } from "../../../redux/features/auth/authApi";
+import {signIn} from "next-auth/react";
 
 type Props = {
   setRoute: (route: string) => void;
@@ -123,12 +124,12 @@ const Login = (props: Props) => {
           <FcGoogle
             className="cursor-pointer mr-2"
             size={30}
-            onClick={() => {}}
+            onClick={() => signIn("google")}
           />
           <AiFillGithub
             className="cursor-pointer mr-2"
             size={30}
-            onClick={() => {}}
+            onClick={() => signIn("github")}
           />
         </div>
         <h5 className="text-center pt-4 font-Poppins text-[14px]">
