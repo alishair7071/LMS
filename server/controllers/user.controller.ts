@@ -167,12 +167,15 @@ export const LoginUser = catchAsyncErrors(
 export const logoutUser = catchAsyncErrors(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+
+      console.log("logged out from the server");
       res.cookie("access_token", "", { maxAge: 1 });
       res.cookie("refresh_token", "", { maxAge: 1 });
 
       const userId = (req.user?._id as string) || "";
 
       await redis.del(userId);
+      console.log("logged out successfully from the server");
 
       res.status(200).json({
         success: true,
@@ -217,14 +220,7 @@ export const updateAccessToken = catchAsyncErrors(
 
       await redis.set(user._id, JSON.stringify(user), "EX", 604800);
 
-
-      res.status(200).json({
-        success: true,
-        accessToken,
-        user,
-      });
-
-      //next();
+      next();
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }

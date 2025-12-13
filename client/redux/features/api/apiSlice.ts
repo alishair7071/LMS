@@ -32,7 +32,7 @@ export const apiSlice = createApi({
             })
           );
         } catch (error) {
-          console.log("Error occured in registration api", error);
+          console.log("Error occured in loadUser api", error);
         }
       },
     }),

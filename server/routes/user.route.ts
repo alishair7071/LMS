@@ -20,7 +20,7 @@ const userRouter = express.Router();
 userRouter.post("/registration", registrationUser);
 userRouter.post("/activate-user", activateUser);
 userRouter.post("/login", LoginUser);
-userRouter.post("/logout", isAuthenticated, logoutUser);
+userRouter.get("/logout", isAuthenticated, logoutUser);
 userRouter.get("/refresh", updateAccessToken);
 userRouter.get("/me", isAuthenticated, getUserInfo);
 userRouter.post("/social-auth", socialAuth);
@@ -28,12 +28,14 @@ userRouter.put("/update-user-info", isAuthenticated, updateUserInfo);
 userRouter.put("/update-user-password", isAuthenticated, updateUserPassword);
 userRouter.put(
   "/update-user-avatar",
+  updateAccessToken,
   isAuthenticated,
   updateUserProfilePicture
 );
 
 userRouter.get(
   "/get-all-users",
+  updateAccessToken,
   isAuthenticated,
   authorizeRoles("admin"),
   getAllUsers
@@ -42,6 +44,7 @@ userRouter.get(
 
 userRouter.put(
   "/update-user-role",
+  updateAccessToken,
   isAuthenticated,
   authorizeRoles("admin"),
   updateUserRole
@@ -50,6 +53,7 @@ userRouter.put(
 
 userRouter.delete(
   "/delete-user/:id",
+  updateAccessToken,
   updateAccessToken,
   isAuthenticated,
   authorizeRoles("admin"),

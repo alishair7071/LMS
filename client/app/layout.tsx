@@ -6,6 +6,9 @@ import { ThemeProvider } from "./utils/theme-provider";
 import { Toaster } from "react-hot-toast";
 import { Providers } from "./Provider";
 import {SessionProvider} from "next-auth/react";
+import { useLoadUserQuery } from "../redux/features/api/apiSlice";
+import Loader from "./components/Loader/Loader";
+import { useEffect, useState } from "react";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -36,12 +39,38 @@ export default function RootLayout({
             defaultTheme="dark"
             enableSystem={false}
           >
-            {children}
+            <Custom>
+              {children}
+            </Custom>
             <Toaster position="top-center" reverseOrder={false} />
           </ThemeProvider>
           </SessionProvider>
         </Providers>
       </body>
     </html>
+  );
+}
+
+
+const Custom = ({children}: {children: React.ReactNode}) => {
+  const [mounted, setMounted] = useState(false);
+  const { isLoading } = useLoadUserQuery({});
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  // Ensure SSR and first client render match to prevent hydration mismatch
+  if (!mounted) {
+    return null;
+  }
+  return (
+    <>
+      {isLoading ? (
+        <>
+          <Loader />
+        </>
+      ) : (
+        <>{children}</>
+      )}
+    </>
   );
 }

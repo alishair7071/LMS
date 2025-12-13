@@ -10,6 +10,7 @@ import ejs from "ejs";
 import sendMail from "../utils/sendMail";
 import path from "path";
 import NotificationModel from "../models/notificationModel";
+import axios from "axios";
 
 //Upload Courses
 export const uploadCourse = catchAsyncErrors(
@@ -22,7 +23,7 @@ export const uploadCourse = catchAsyncErrors(
           folder: "lms-courses",
         });
         data.thumbnail = {
-          publicId: myCloud.public_id,
+          public_id: myCloud.public_id,
           url: myCloud.secure_url,
         };
       }
@@ -43,10 +44,18 @@ export const editCourse = catchAsyncErrors(
       const courseId = req.params.id;
       const courseData = (await CourseModel.findById(courseId)) as any;
       if (thumbnail) {
-        await cloudinary.v2.uploader.destroy(courseData.thumbnail.public_id);
+        // Handle both legacy `publicId` and current `public_id` field names
+        const existingPublicId =
+          courseData?.thumbnail?.public_id || courseData?.thumbnail?.publicId;
+
+        if (existingPublicId) {
+          await cloudinary.v2.uploader.destroy(existingPublicId);
+        }
+
         const myCloud = await cloudinary.v2.uploader.upload(thumbnail, {
           folder: "lms-courses",
         });
+        
         data.thumbnail = {
           public_id: myCloud.public_id,
           url: myCloud.secure_url,
@@ -113,14 +122,16 @@ export const getSingleCourse = catchAsyncErrors(
 export const getAllCourses = catchAsyncErrors(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const isCacheExits = await redis.get("allCourses");
+     
+      /*const isCacheExits = await redis.get("allCourses");
       if (isCacheExits) {
         const course = JSON.parse(isCacheExits);
         res.status(200).json({
           success: true,
           course,
         });
-      } else {
+        */
+      
         const courses = await CourseModel.find().select(
           "-courseData.videoUrl -courseData.suggestions -courseData.questions -courseData.links"
         );
@@ -129,7 +140,6 @@ export const getAllCourses = catchAsyncErrors(
           success: true,
           courses,
         });
-      }
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
     }
@@ -421,3 +431,31 @@ export const deleteCourse=catchAsyncErrors(async(req: Request, res: Response, ne
     }
   }
 )
+
+
+
+
+// generate video url
+export const generateVideoUrl = catchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { videoId } = req.body;
+      const response = await axios.post(
+        `https://dev.vdocipher.com/api/videos/${videoId}/otp`,
+        {
+          ttl: 300,
+        },
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: `Apisecret ${process.env.VDOCIPHER_API_SECRET}`,
+          },
+        }
+      );
+      res.json(response.data);
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
