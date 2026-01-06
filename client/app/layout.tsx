@@ -10,6 +10,10 @@ import { useLoadUserQuery } from "../redux/features/api/apiSlice";
 import Loader from "./components/Loader/Loader";
 import { useEffect, useState } from "react";
 
+import  socketIO  from "socket.io-client";
+const ENDPOINT = process.env.NEXT_PUBLIC_SOCKET_SERVER_URI || "/";
+const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
+
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -52,9 +56,39 @@ export default function RootLayout({
 }
 
 
+
 const Custom = ({children}: {children: React.ReactNode}) => {
   const [mounted, setMounted] = useState(false);
   const { isLoading } = useLoadUserQuery({});
+
+  useEffect(() => {
+    const onConnect = () => {
+      console.log("Connected to socket", socketId.id);
+    };
+
+    const onDisconnect = (reason: any) => {
+      console.log("Socket disconnected:", reason);
+    };
+    const onConnectError = (err: any) => {
+      console.log("Socket connect_error:", err?.message || err);
+    };
+
+    socketId.on("connect", onConnect);
+    socketId.on("disconnect", onDisconnect);
+    socketId.on("connect_error", onConnectError);
+
+    // If the socket connected before this effect ran, "connect" won't fire again.
+    if (socketId.connected) {
+      onConnect();
+    }
+
+    return () => {
+      socketId.off("connect", onConnect);
+      socketId.off("disconnect", onDisconnect);
+      socketId.off("connect_error", onConnectError);
+    };
+  }, []);
+
   useEffect(() => {
     setMounted(true);
   }, []);

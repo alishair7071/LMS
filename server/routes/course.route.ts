@@ -39,7 +39,7 @@ courseRouter.get("/get-courses", getAllCourses);
 
 courseRouter.get("/get-course-content/:id", updateAccessToken, isAuthenticated, getCourseByUser);
 
-courseRouter.post("/add-question", updateAccessToken, isAuthenticated, addQuestionToCourse);
+courseRouter.put("/add-question", updateAccessToken, isAuthenticated, addQuestionToCourse);
 
 courseRouter.put("/add-answer", updateAccessToken, isAuthenticated, addAnswer);
 

@@ -1,3 +1,5 @@
+"use client";
+
 import React, { FC, useEffect, useState } from "react";
 import axios from "axios";
 type Props = {
@@ -11,16 +13,30 @@ const CoursePlayer: FC<Props> = ({ videoUrl }) => {
     playbackInfo: "",
   });
 
+  console.log("videoUrl", videoUrl);
+
   useEffect(() => {
+    const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL;
+    if (!baseUrl) {
+      console.error(
+        "NEXT_PUBLIC_SERVER_URL is not set. Cannot request VdoCipher OTP."
+      );
+      return;
+    }
+
+    const url = baseUrl.endsWith("/")
+      ? `${baseUrl}getVdoCipherOTP`
+      : `${baseUrl}/getVdoCipherOTP`;
+
     axios
-      .post(`http://localhost:8000/api/v1/getVdoCipherOTP`, {
+      .post(url, {
         videoId: videoUrl,
       })
       .then((res) => {
         setVideoData(res.data);
       })
       .catch((err) => {
-        console.error("API Error:", err);
+        console.error("VdoCipher OTP API Error:", err?.response?.data || err);
       });
   }, [videoUrl]);
 

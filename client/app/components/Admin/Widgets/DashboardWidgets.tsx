@@ -53,48 +53,45 @@ const DashboardWidgets: FC<Props> = ({ open }) => {
     } = useGetOrdersAnalyticsQuery({});
 
     useEffect(() => {
-        if (isLoading && ordersLoading) {
+        if (isLoading || ordersLoading) {
             return;
         } else {
             if (data && ordersData) {
-                const usersLastTwoMonths = data.users.last12Months.slice(-2);
-                const ordersLastTwoMonths = ordersData.orders.last12Months.slice(-2);
+                // server returns months in newest -> oldest order (current month is index 0)
+                const usersCurrentMonth = data?.users?.last12Months?.[0]?.count ?? 0;
+                const usersPreviousMonth = data?.users?.last12Months?.[1]?.count ?? 0;
+                const ordersCurrentMonth =
+                    ordersData?.orders?.last12Months?.[0]?.count ?? 0;
+                const ordersPreviousMonth =
+                    ordersData?.orders?.last12Months?.[1]?.count ?? 0;
 
-                if (
-                    usersLastTwoMonths.length === 2 &&
-                    ordersLastTwoMonths.length === 2
-                ) {
-                    const usersCurrentMonth = usersLastTwoMonths[1].count;
-                    const usersPreviousMonth = usersLastTwoMonths[0].count;
-                    const ordersCurrentMonth = ordersLastTwoMonths[1].count;
-                    const ordersPreviousMonth = ordersLastTwoMonths[0].count;
+                const usersPercentChange =
+                    usersPreviousMonth !== 0
+                        ? ((usersCurrentMonth - usersPreviousMonth) / usersPreviousMonth) *
+                          100
+                        : usersCurrentMonth === 0
+                          ? 0
+                          : 100;
 
-                    const usersPercentChange =
-                        usersPreviousMonth !== 0
-                            ? ((usersCurrentMonth - usersPreviousMonth) /
-                                usersPreviousMonth) *
-                            100
-                            : 100;
+                const ordersPercentChange =
+                    ordersPreviousMonth !== 0
+                        ? ((ordersCurrentMonth - ordersPreviousMonth) / ordersPreviousMonth) *
+                          100
+                        : ordersCurrentMonth === 0
+                          ? 0
+                          : 100;
 
-                    const ordersPercentChange =
-                        ordersPreviousMonth !== 0
-                            ? ((ordersCurrentMonth - ordersPreviousMonth) /
-                                ordersPreviousMonth) *
-                            100
-                            : 100;
+                setuserComparePercentage({
+                    currentMonth: usersCurrentMonth,
+                    previousMonth: usersPreviousMonth,
+                    percentChange: usersPercentChange,
+                });
 
-                    setuserComparePercentage({
-                        currentMonth: usersCurrentMonth,
-                        previousMonth: usersPreviousMonth,
-                        percentChange: usersPercentChange,
-                    });
-
-                    setOrdersComparePercentage({
-                        currentMonth: ordersCurrentMonth,
-                        previousMonth: ordersPreviousMonth,
-                        percentChange: ordersPercentChange,
-                    });
-                }
+                setOrdersComparePercentage({
+                    currentMonth: ordersCurrentMonth,
+                    previousMonth: ordersPreviousMonth,
+                    percentChange: ordersPercentChange,
+                });
             }
         }
     }, [isLoading, ordersLoading, data, ordersData]);

@@ -152,9 +152,12 @@ export const getCourseByUser = catchAsyncErrors(
     try {
       const userCourseList = req.user?.courses;
       const courseId = req.params.id;
-      const courseExist = userCourseList?.find(
-        (course: any) => course.courseId.toString() === courseId.toString()
-      );
+      const courseExist = userCourseList?.find((course: any) => {
+        // tolerate historical bad data where `courses` items might be raw ids/strings
+        const id = course?.courseId ?? course?._id ?? course;
+        if (!id) return false;
+        return id.toString() === courseId.toString();
+      });
       if (!courseExist) {
         return next(
           new ErrorHandler("You are not eligible to access this course.", 404)
@@ -201,11 +204,12 @@ export const addQuestionToCourse = catchAsyncErrors(
 
       courseContent.questions.push(newQuestion);
        
-      await NotificationModel.create({
+   const notification = await NotificationModel.create({
         user: req.user?._id,
         title: "New Question Recived",
         message: `You have a new question in  ${courseContent?.title}`,
       });
+     
       
 
       course?.save();
@@ -340,13 +344,13 @@ export const addReview = catchAsyncErrors(
       }
       await course?.save();
       
-      //await redis.set(courseId, JSON.stringify(course), "EX", 604800);
+      await redis.set(courseId, JSON.stringify(course), "EX", 604800);
       
-      /*await NotificationModel.create({
+      await NotificationModel.create({
         user: req.user?._id,
         title: "New Review Received",
         message: `${req.user?.name} has given a new review for ${course?.name}`,
-      });*/
+      });
 
       res.status(200).json({
         success: true,
@@ -388,7 +392,7 @@ export const addReplyToReview=catchAsyncErrors(async (req: Request, res: Respons
     review.commentReplies = [];
     }
     review.commentReplies.push(replyData);
-  //  await redis.set(courseId,JSON.stringify(course),'EX',604800);
+    await redis.set(courseId,JSON.stringify(course),'EX',604800);
     await course?.save();
     res.status(201).json({
       success:true,
@@ -438,8 +442,25 @@ export const deleteCourse=catchAsyncErrors(async(req: Request, res: Response, ne
 // generate video url
 export const generateVideoUrl = catchAsyncErrors(
   async (req: Request, res: Response, next: NextFunction) => {
+    console.log("req.body", req.body);
+
     try {
       const { videoId } = req.body;
+
+
+      if (!videoId) {
+        return next(new ErrorHandler("videoId is required", 400));
+      }
+
+      if (!process.env.VDOCIPHER_API_SECRET) {
+        return next(
+          new ErrorHandler(
+            "VDOCIPHER_API_SECRET is not configured on the server",
+            500,
+          ),
+        );
+      }
+
       const response = await axios.post(
         `https://dev.vdocipher.com/api/videos/${videoId}/otp`,
         {
@@ -455,7 +476,21 @@ export const generateVideoUrl = catchAsyncErrors(
       );
       res.json(response.data);
     } catch (error: any) {
-      return next(new ErrorHandler(error.message, 400));
+
+      console.log("error", error);
+      const apiMessage =
+        error?.response?.data?.message ||
+        error?.response?.data?.error ||
+        error?.response?.data ||
+        error?.message ||
+        "Failed to generate VdoCipher OTP";
+
+      return next(
+        new ErrorHandler(
+          typeof apiMessage === "string" ? apiMessage : JSON.stringify(apiMessage),
+          400,
+        ),
+      );
     }
   }
 );
