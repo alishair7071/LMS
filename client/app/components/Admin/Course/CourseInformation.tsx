@@ -19,7 +19,15 @@ const CourseInformation = ({ courseInfo, setCourseInfo, active, setActive }: Pro
 
     useEffect(() => {
         if (data) {
-            setCategories(data?.layout?.categories);
+            const cats = data?.layout?.categories || [];
+            setCategories(cats);
+
+            // If the select renders with value "" (no matching option),
+            // the UI may show the first option but state stays empty.
+            // Default to the first category to satisfy backend required field.
+            if (!courseInfo?.categories && cats.length > 0) {
+                setCourseInfo({ ...courseInfo, categories: cats[0]?.title || "" });
+            }
         }
     }, [data]);
 
@@ -185,11 +193,15 @@ const CourseInformation = ({ courseInfo, setCourseInfo, active, setActive }: Pro
                         <select
                             id="categories"
                             className={`${styles.input} dark:bg-slate-900 dark:text-white`}
+                            required
                             value={courseInfo.categories}
                             onChange={(e: any) =>
                                 setCourseInfo({ ...courseInfo, categories: e.target.value })
                             }
                         >
+                            <option value="" disabled>
+                                Select category
+                            </option>
                             {categories.map((category: any) => (
                                 <option key={category._id} value={category.title}>
                                     {category.title}
