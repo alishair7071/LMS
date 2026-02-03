@@ -1,8 +1,8 @@
-# Complete Case Study - Learnix LMS
+# Complete Case Study - LMS LMS
 
 ## Overview
 
-**Learnix LMS** is a full-featured **Learning Management System** built with **Next.js** with **Typescript** in frontend and **Node.js** and **Express** with **Typescript** in the backend. The system provides **RESTful APIs** for managing online courses, user authentication, course enrollment, payment processing, content delivery, and analytics. It follows a **multi-layered architecture** ensuring clear separation of concerns between routing, business logic, and data access.
+**LMS LMS** is a full-featured **Learning Management System** built with **Next.js** with **Typescript** in frontend and **Node.js** and **Express** with **Typescript** in the backend. The system provides **RESTful APIs** for managing online courses, user authentication, course enrollment, payment processing, content delivery, and analytics. It follows a **multi-layered architecture** ensuring clear separation of concerns between routing, business logic, and data access.
 
 ### System is designed to support :
 
@@ -24,7 +24,7 @@ o- **Dynamic layout management** for frontend content
 
 ## Project Goals
 
-**Learnix LMS** is a community-driven platform built to help beginner developers grow into confident, industry-ready software engineers. It bridges the gap between theory and practice by offering curated lessons, real-world projects, and expert guidance—focusing on learning by doing rather than just consuming tutorials.
+**LMS LMS** is a community-driven platform built to help beginner developers grow into confident, industry-ready software engineers. It bridges the gap between theory and practice by offering curated lessons, real-world projects, and expert guidance—focusing on learning by doing rather than just consuming tutorials.
 
 o- **Beginner-friendly, practical learning:** Emphasizes real-world application of concepts to build strong engineering foundations.  
 o- **Community-driven growth:** Encourages mentorship, collaboration, and peer feedback in a supportive environment.  
@@ -34,7 +34,7 @@ o- **Progress through consistency:** Inspires learners to improve *“one commit
 
 ## System Architecture Overview
 
-**Learnix LMS** follows a **three-tier architecture** consisting of a **Node.js/Express backend**, **MongoDB database**, and **Next.js frontend**.  
+**LMS LMS** follows a **three-tier architecture** consisting of a **Node.js/Express backend**, **MongoDB database**, and **Next.js frontend**.  
 This design ensures scalability, modularity, and smooth integration between client and server.
 
 | Layer | Description | Key Components / Features |
@@ -111,11 +111,11 @@ sequenceDiagram
 
 ## Key Features 
 
-Learnix is a community-driven Learning Management System (LMS) designed for aspiring developers who want to build real-world skills. It combines technical depth with collaborative learning to help users go beyond tutorials and start shipping production-ready applications.
+LMS is a community-driven Learning Management System (LMS) designed for aspiring developers who want to build real-world skills. It combines technical depth with collaborative learning to help users go beyond tutorials and start shipping production-ready applications.
 
 ### 1- Course Management
 
-Learnix supports comprehensive course structures with the following features:
+LMS supports comprehensive course structures with the following features:
 
 o- **Video-based learning**  
   Each course includes thumbnails, demo URLs, and structured video sections.
@@ -220,7 +220,7 @@ o- **Discussion in Q/A Notifications**
 
 ## API Architecture
 
-Learnix features an organized RESTful API structure, with endpoints grouped by business domain for clarity and scalability:
+LMS features an organized RESTful API structure, with endpoints grouped by business domain for clarity and scalability:
 
 o- **User Authentication & Profiles**  `/api/v1/user/*`
 
@@ -308,14 +308,6 @@ graph TD
 ### Real-time Communication
 
 - **Socket.io** – Bi-directional communication for notifications
-
-### Development & Deployment
-
-- **ts-node-dev (v2.0.0)** – Development server with auto-restart
-- **dotenv (v17.2.2)** – Environment variable management
-- **Vercel** – Deployment platform (frontend hosted at [lms-frontend-plum-three.vercel.app ↗](https://learnix-lms.vercel.app/))
-- **Render** – Deployment platform (backend hosted at [learnix-lms-backend.onrender.com ↗](https://learnix-lms-backend.onrender.com))
-- **Socket Server** hosted on **Render** at [learnix-socket-server-lms.onrender.com ↗](https://learnix-socket-server-lms.onrender.com).
 
 ---
 
@@ -700,7 +692,7 @@ sequenceDiagram
 
 
 ### TypeScript Integration (Frontend & Backend)
-The entire Learnix LMS project is built using **TypeScript** across both frontend and backend layers.  
+The entire LMS LMS project is built using **TypeScript** across both frontend and backend layers.  
 This ensures **strong type safety**, **better scalability**, and **early error detection** during development.  
 By enforcing strict type definitions, it reduces runtime bugs and improves maintainability across complex modules such as course management, authentication, and data processing.
 
@@ -712,19 +704,19 @@ It follows modern security standards for **JWT-based authentication** and **toke
 ### Efficient State Management with RTK Query
 The frontend leverages **RTK Query**, a part of Redux Toolkit, for efficient and real-time state synchronization.  
 This enables **automatic caching**, **data fetching**, and **revalidation** of API calls, significantly reducing boilerplate code and improving app performance.  
-It ensures that Learnix LMS delivers a responsive and up-to-date experience even under heavy data flow.
+It ensures that LMS LMS delivers a responsive and up-to-date experience even under heavy data flow.
 
 ### Enhanced User Experience (UX)
 The platform is designed with a focus on **clarity, accessibility, and ease of use**.  
-From intuitive navigation to consistent interface elements, Learnix LMS ensures users can engage with courses, dashboards, and content smoothly.  
+From intuitive navigation to consistent interface elements, LMS LMS ensures users can engage with courses, dashboards, and content smoothly.  
 A responsive layout and clear feedback mechanisms contribute to a seamless learning experience across devices.
 
 --- 
 
 ## Conclusion
 
-Learnix LMS stands out as a complete, scalable, and production-ready Learning Management System.  
+LMS LMS stands out as a complete, scalable, and production-ready Learning Management System.  
 It unites learners, instructors, and administrators in one collaborative ecosystem focused on real-world skill development.  
-With robust authentication, a TypeScript-based architecture, and seamless state management through RTK Query, it ensures reliability and performance. Designed for both growth and community engagement, Learnix LMS bridges theory and practice to help developers become industry-ready professionals.
+With robust authentication, a TypeScript-based architecture, and seamless state management through RTK Query, it ensures reliability and performance. Designed for both growth and community engagement, LMS LMS bridges theory and practice to help developers become industry-ready professionals.
 
 
