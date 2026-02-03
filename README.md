@@ -1,8 +1,8 @@
-# Complete Case Study - LMS LMS
+# Complete Case Study - LMS
 
 ## Overview
 
-**LMS LMS** is a full-featured **Learning Management System** built with **Next.js** with **Typescript** in frontend and **Node.js** and **Express** with **Typescript** in the backend. The system provides **RESTful APIs** for managing online courses, user authentication, course enrollment, payment processing, content delivery, and analytics. It follows a **multi-layered architecture** ensuring clear separation of concerns between routing, business logic, and data access.
+**LMS** is a full-featured **Learning Management System** built with **Next.js** with **Typescript** in frontend and **Node.js** and **Express** with **Typescript** in the backend. The system provides **RESTful APIs** for managing online courses, user authentication, course enrollment, payment processing, content delivery, and analytics. It follows a **multi-layered architecture** ensuring clear separation of concerns between routing, business logic, and data access.
 
 ### System is designed to support :
 
@@ -24,7 +24,7 @@ o- **Dynamic layout management** for frontend content
 
 ## Project Goals
 
-**LMS LMS** is a community-driven platform built to help beginner developers grow into confident, industry-ready software engineers. It bridges the gap between theory and practice by offering curated lessons, real-world projects, and expert guidance—focusing on learning by doing rather than just consuming tutorials.
+**LMS** is a community-driven platform built to help beginner developers grow into confident, industry-ready software engineers. It bridges the gap between theory and practice by offering curated lessons, real-world projects, and expert guidance—focusing on learning by doing rather than just consuming tutorials.
 
 o- **Beginner-friendly, practical learning:** Emphasizes real-world application of concepts to build strong engineering foundations.  
 o- **Community-driven growth:** Encourages mentorship, collaboration, and peer feedback in a supportive environment.  
@@ -34,7 +34,7 @@ o- **Progress through consistency:** Inspires learners to improve *“one commit
 
 ## System Architecture Overview
 
-**LMS LMS** follows a **three-tier architecture** consisting of a **Node.js/Express backend**, **MongoDB database**, and **Next.js frontend**.  
+**LMS** follows a **three-tier architecture** consisting of a **Node.js/Express backend**, **MongoDB database**, and **Next.js frontend**.  
 This design ensures scalability, modularity, and smooth integration between client and server.
 
 | Layer | Description | Key Components / Features |
@@ -692,7 +692,7 @@ sequenceDiagram
 
 
 ### TypeScript Integration (Frontend & Backend)
-The entire LMS LMS project is built using **TypeScript** across both frontend and backend layers.  
+The entire LMS project is built using **TypeScript** across both frontend and backend layers.  
 This ensures **strong type safety**, **better scalability**, and **early error detection** during development.  
 By enforcing strict type definitions, it reduces runtime bugs and improves maintainability across complex modules such as course management, authentication, and data processing.
 
@@ -704,19 +704,19 @@ It follows modern security standards for **JWT-based authentication** and **toke
 ### Efficient State Management with RTK Query
 The frontend leverages **RTK Query**, a part of Redux Toolkit, for efficient and real-time state synchronization.  
 This enables **automatic caching**, **data fetching**, and **revalidation** of API calls, significantly reducing boilerplate code and improving app performance.  
-It ensures that LMS LMS delivers a responsive and up-to-date experience even under heavy data flow.
+It ensures that LMS delivers a responsive and up-to-date experience even under heavy data flow.
 
 ### Enhanced User Experience (UX)
 The platform is designed with a focus on **clarity, accessibility, and ease of use**.  
-From intuitive navigation to consistent interface elements, LMS LMS ensures users can engage with courses, dashboards, and content smoothly.  
+From intuitive navigation to consistent interface elements, LMS ensures users can engage with courses, dashboards, and content smoothly.  
 A responsive layout and clear feedback mechanisms contribute to a seamless learning experience across devices.
 
 --- 
 
 ## Conclusion
 
-LMS LMS stands out as a complete, scalable, and production-ready Learning Management System.  
+LMS stands out as a complete, scalable, and production-ready Learning Management System.  
 It unites learners, instructors, and administrators in one collaborative ecosystem focused on real-world skill development.  
-With robust authentication, a TypeScript-based architecture, and seamless state management through RTK Query, it ensures reliability and performance. Designed for both growth and community engagement, LMS LMS bridges theory and practice to help developers become industry-ready professionals.
+With robust authentication, a TypeScript-based architecture, and seamless state management through RTK Query, it ensures reliability and performance. Designed for both growth and community engagement, LMS bridges theory and practice to help developers become industry-ready professionals.
 
 
